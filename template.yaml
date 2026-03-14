@@ -37,7 +37,7 @@ spec:
             - gke
             - airflow
           enumNames:
-            - 'GKE Variables (Prefixo muda conforme o projeto escolhido abaixo)'
+            - 'GKE Variables (Prefixo muda conforme o projeto escolhido abaixo - Ex: GKE_INTEGRATION_SECRET_NAME / GKE_PRE_PROD_SECRET_NAME)'
             - 'Airflow (Prefixo automático: AIRFLOW_VARIABLES_...)'
           default: gke
           ui:widget: radio
