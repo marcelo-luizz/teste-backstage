@@ -12,9 +12,11 @@ spec:
   type: service
   
   parameters:
-    - title: Tipo de Operação
+    - title: Configuração da Operação
       required:
         - operation_type
+        - secret_type
+        - project_id
       properties:
         operation_type:
           title: O que você deseja fazer?
@@ -27,21 +29,40 @@ spec:
             - 'Atualizar Secret(s) Existente(s)'
           default: create
           ui:widget: radio
+          
+        secret_type:
+          title: Qual o destino/tipo desta Secret?
+          type: string
+          enum:
+            - gke
+            - airflow
+          enumNames:
+            - 'GKE Variables (Prefixo muda conforme o projeto escolhido abaixo)'
+            - 'Airflow (Prefixo automático: AIRFLOW_VARIABLES_...)'
+          default: gke
+          ui:widget: radio
 
-    - title: Projeto e Configurações
-      required: 
-        - project_id
-        - secrets
-      properties:
         project_id:
           title: Projeto GCP
           type: string
           enum:
             - devops-labs-397603
-        
+            - jeitto-integracao
+            - jeitto-pre-prod
+            - jeitto-prod
+          enumNames:
+            - 'Devops Labs (devops-labs-397603)'
+            - 'Integração (jeitto-integracao)'
+            - 'Pré Produção (jeitto-pre-prod)'
+            - 'Produção (jeitto-prod)'
+
+    - title: Preenchimento das Secrets
+      required: 
+        - secrets
+      properties:
         secrets:
           title: Lista de Secrets
-          description: Clique no botão de "+" ou "Add Item" para incluir vários secrets de uma vez.
+          description: O prefixo selecionado na etapa anterior será adicionado automaticamente.
           type: array
           minItems: 1
           items:
@@ -51,13 +72,14 @@ spec:
               - value
             properties:
               name:
-                title: Secret ID (Chave)
-                description: "Ex: GKE_INTEGRATION_MINHA_VARIAVEL"
+                title: Nome da Secret (SEM O PREFIXO)
+                description: "Digite apenas o nome base. Ex: MINHA_VARIAVEL. Apenas letras MAIÚSCULAS, números e _"
                 type: string
                 pattern: '^[A-Z0-9_]+$'
               value:
                 title: Secret Value (Valor)
                 type: string
+                ui:widget: password
                 ui:backstage:
                   review:
                     mask: true 
@@ -68,6 +90,7 @@ spec:
       input:
         project: ${{ parameters.project_id }}
         operation: ${{ parameters.operation_type }}
+        secret_type: ${{ parameters.secret_type }} 
         secrets: ${{ parameters.secrets }}
 
   output:
