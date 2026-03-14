@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: create-gcp-secret
-  title: Create Multiple Secrets in GCP
+  title: Create or Update Secrets in GCP
   description: Template para criar ou atualizar múltiplos secrets no GCP Secret Manager
   tags:
     - gcp
@@ -12,6 +12,23 @@ spec:
   type: service
   
   parameters:
+    - title: Tipo de Operação
+      required:
+        - operation_type
+      properties:
+        operation_type:
+          title: O que você deseja fazer?
+          type: string
+          enum:
+            - create
+            - update
+          # enumNames deixa as opções mais amigáveis na tela
+          enumNames:
+            - 'Criar novo(s) Secret(s)'
+            - 'Atualizar Secret(s) Existente(s)'
+          default: create
+          ui:widget: radio # Renderiza como opções de marcar (bolinhas)
+
     - title: Projeto e Configurações
       required: 
         - project_id
@@ -36,25 +53,25 @@ spec:
             properties:
               name:
                 title: Secret ID (Chave)
-                description: "Ex: MINHA_VARIAVEL_GKE_PRD"
+                description: "Ex: GKE_INTEGRATION_MINHA_VARIAVEL"
                 type: string
                 pattern: '^[A-Z0-9_]+$'
               value:
                 title: Secret Value (Valor)
                 type: string
-                # A configuração abaixo transforma o campo em um input de "senha" na tela
                 ui:widget: password 
                 ui:backstage:
                   review:
-                    mask: true # Esconde os valores na tela de revisão final
+                    mask: true 
 
   steps:
     - id: upsert-secrets-action
-      name: Criando e Atualizando Secrets no GCP
-      # Aqui nós chamamos a custom action Node.js que você acabou de criar!
+      name: Executando Operação no GCP
       action: gcp:secrets-manager:upsert
       input:
         project: ${{ parameters.project_id }}
+        # Passamos a opção escolhida pelo usuário para a nossa Action em Node.js
+        operation: ${{ parameters.operation_type }}
         secrets: ${{ parameters.secrets }}
 
   output:
