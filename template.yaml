@@ -2,60 +2,62 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: create-gcp-secret
-  title: Create/Update Secrets in GCP
-  description: Crie ou atualize múltiplos secrets no GCP Secret Manager.
+  title: Create Multiple Secrets in GCP
+  description: Template para criar ou atualizar múltiplos secrets no GCP Secret Manager
   tags:
     - gcp
     - secret-manager
 spec:
   owner: guest
   type: service
+  
   parameters:
-    - title: Configuração do Projeto
-      required: [project_id]
+    - title: Projeto e Configurações
+      required: 
+        - project_id
+        - secrets
       properties:
         project_id:
           title: Projeto GCP
           type: string
           enum:
             - devops-labs-397603
-            # - jeitto-pre-prod
-            # - jeitto-prod
-            
-    - title: Adicionar Secrets
-      required: [secrets_list]
-      properties:
-        secrets_list:
+        
+        secrets:
           title: Lista de Secrets
-          description: Clique em "+" para adicionar mais secrets
+          description: Clique no botão de "+" ou "Add Item" para incluir vários secrets de uma vez.
           type: array
           minItems: 1
           items:
             type: object
-            required:[name, value]
+            required: 
+              - name
+              - value
             properties:
               name:
-                title: Secret ID
+                title: Secret ID (Chave)
+                description: "Ex: MINHA_VARIAVEL_GKE_PRD"
                 type: string
-                description: "Ex: MINHA_VARIAVEL_GKE_<ENV>"
                 pattern: '^[A-Z0-9_]+$'
               value:
-                title: Secret Value
+                title: Secret Value (Valor)
                 type: string
-                ui:widget: password # Esconde o valor na tela igual senha
+                # A configuração abaixo transforma o campo em um input de "senha" na tela
+                ui:widget: password 
                 ui:backstage:
                   review:
-                    mask: true # Esconde no resumo final (Review) da tela
+                    mask: true # Esconde os valores na tela de revisão final
 
   steps:
-    - id: upsert-gcp-secrets
+    - id: upsert-secrets-action
       name: Criando e Atualizando Secrets no GCP
+      # Aqui nós chamamos a custom action Node.js que você acabou de criar!
       action: gcp:secrets-manager:upsert
       input:
         project: ${{ parameters.project_id }}
-        secrets: ${{ parameters.secrets_list }}
+        secrets: ${{ parameters.secrets }}
 
   output:
     links:
-      - title: Acessar Secret Manager no GCP
+      - title: Visualizar Secrets no Console do GCP
         url: https://console.cloud.google.com/security/secret-manager?project=${{ parameters.project_id }}
