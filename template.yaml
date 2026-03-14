@@ -72,6 +72,8 @@ spec:
           description: O prefixo selecionado na etapa anterior será adicionado automaticamente.
           type: array
           minItems: 1
+          ui:options:
+            itemTitleProp: name
           items:
             type: object
             required: 
@@ -86,7 +88,6 @@ spec:
               value:
                 title: Secret Value (Valor)
                 type: string
-                ui:widget: password
                 ui:backstage:
                   review:
                     mask: true 
