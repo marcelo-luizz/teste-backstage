@@ -58,8 +58,6 @@ spec:
               value:
                 title: Secret Value (Valor)
                 type: string
-                # Aqui chamamos o nosso novo componente!
-                ui:field: PasswordReveal
                 ui:backstage:
                   review:
                     mask: true 
