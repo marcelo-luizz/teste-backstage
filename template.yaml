@@ -10,7 +10,7 @@ metadata:
 spec:
   owner: guest
   type: service
-  
+
   parameters:
     - title: Configuração da Operação
       required:
@@ -105,57 +105,57 @@ spec:
       - title: Visualizar Secrets no Console do GCP
         url: https://console.cloud.google.com/security/secret-manager?project=${{ parameters.project_id }}
     
-    # Esta sessão renderiza a documentação de uso ao final com sucesso!
-    text: |
-      ### 🎉 Operação concluída com sucesso!
-      Suas variáveis foram processadas no GCP Secret Manager.
-      
-      ---
-      
-      ### 📖 Como utilizar essa Secret no GKE (Kubernetes)
-      
-      Para injetar essa variável de forma segura na sua aplicação, você precisará criar um manifesto do **ExternalSecret** e conectá-lo ao seu **Deployment**.
-      
-      #### 1. Criar o ExternalSecret
-      Este manifesto busca a secret do GCP e cria uma Secret nativa do Kubernetes no seu namespace.
-      
-      ```yaml
-      apiVersion: external-secrets.io/v1beta1
-      kind: ExternalSecret
-      metadata:
-        name: minha-app-secrets
-        namespace: meu-namespace
-      spec:
-        refreshInterval: 1h
-        secretStoreRef:
-          kind: ClusterSecretStore
-          name: gcp-secret-store # Nome do seu Store configurado no cluster
-        target:
-          name: k8s-secret-gerada # Nome do secret que será criado DENTRO do K8s
-          creationPolicy: Owner
-        data:
-          - secretKey: MINHA_VARIAVEL_NO_POD
-            remoteRef:
-              # Substitua pelo NOME COMPLETO salvo no GCP (Prefixo + Nome digitado)
-              key: GKE_INTEGRATION_MINHA_VARIAVEL 
-      ```
-      
-      #### 2. Adicionar ao Deployment
-      No manifesto de Deployment da sua aplicação, injete a Secret criada como variáveis de ambiente (`envFrom`):
-      
-      ```yaml
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
-        name: minha-aplicacao
-      spec:
-        template:
+    text:
+      - title: 🎉 Operação concluída com sucesso!
+        content: |
+          Suas variáveis foram processadas no GCP Secret Manager.
+          
+          ---
+          
+          ### 📖 Como utilizar essa Secret no GKE (Kubernetes)
+          
+          Para injetar essa variável de forma segura na sua aplicação, você precisará criar um manifesto do **ExternalSecret** e conectá-lo ao seu **Deployment**.
+          
+          #### 1. Criar o ExternalSecret
+          Este manifesto busca a secret do GCP e cria uma Secret nativa do Kubernetes no seu namespace.
+          
+          ```yaml
+          apiVersion: external-secrets.io/v1beta1
+          kind: ExternalSecret
+          metadata:
+            name: minha-app-secrets
+            namespace: meu-namespace
           spec:
-            containers:
-              - name: app-container
-                image: minha-imagem:latest
-                envFrom:
-                  - secretRef:
-                      # Deve ser idêntico ao "target.name" do passo anterior
-                      name: k8s-secret-gerada 
-      ```
+            refreshInterval: 1h
+            secretStoreRef:
+              kind: ClusterSecretStore
+              name: gcp-secret-store # Nome do seu Store configurado no cluster
+            target:
+              name: k8s-secret-gerada # Nome do secret que será criado DENTRO do K8s
+              creationPolicy: Owner
+            data:
+              - secretKey: MINHA_VARIAVEL_NO_POD
+                remoteRef:
+                  # Substitua pelo NOME COMPLETO salvo no GCP (Prefixo + Nome digitado)
+                  key: GKE_INTEGRATION_MINHA_VARIAVEL 
+          ```
+          
+          #### 2. Adicionar ao Deployment
+          No manifesto de Deployment da sua aplicação, injete a Secret criada como variáveis de ambiente (`envFrom`):
+          
+          ```yaml
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: minha-aplicacao
+          spec:
+            template:
+              spec:
+                containers:
+                  - name: app-container
+                    image: minha-imagem:latest
+                    envFrom:
+                      - secretRef:
+                          # Deve ser idêntico ao "target.name" do passo anterior
+                          name: k8s-secret-gerada 
+          ```
