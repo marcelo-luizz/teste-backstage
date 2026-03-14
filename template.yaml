@@ -36,9 +36,11 @@ spec:
           enum:
             - gke
             - airflow
+            - database_password
           enumNames:
             - 'GKE Variables (Prefixo muda conforme o projeto escolhido abaixo - Ex: GKE_INTEGRATION_SECRET_NAME / GKE_PRE_PROD_SECRET_NAME)'
             - 'Airflow (Prefixo automático: AIRFLOW_VARIABLES_...)'
+            - 'Database Passwords (Prefixo automático: DATABASE_...)' 
           default: gke
           ui:widget: radio
 
@@ -79,7 +81,6 @@ spec:
               value:
                 title: Secret Value (Valor)
                 type: string
-                ui:widget: password
                 ui:backstage:
                   review:
                     mask: true 
