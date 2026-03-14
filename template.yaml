@@ -1,41 +1,61 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: gcp-secret-create
-  title: Create GCP Secret
-  description: Create a secret in Google Cloud Secret Manager
+  name: create-gcp-secret
+  title: Create/Update Secrets in GCP
+  description: Crie ou atualize múltiplos secrets no GCP Secret Manager.
+  tags:
+    - gcp
+    - secret-manager
 spec:
-  owner: user:guest
+  owner: guest
   type: service
-
   parameters:
-    - title: Secret configuration
-      required:
-        - project
-        - secret_id
-        - secret_value
+    - title: Configuração do Projeto
+      required: [project_id]
       properties:
-        project:
-          title: GCP Project ID
+        project_id:
+          title: Projeto GCP
           type: string
-          description: ID do projeto GCP
-
-        secret_id:
-          title: Secret ID
-          type: string
-          description: Nome do secret
-
-        secret_value:
-          title: Secret Value
-          type: string
-          description: Valor do secret
-          ui:widget: password
+          enum:
+            - devops-labs-397603
+            # - jeitto-pre-prod
+            # - jeitto-prod
+            
+    - title: Adicionar Secrets
+      required: [secrets_list]
+      properties:
+        secrets_list:
+          title: Lista de Secrets
+          description: Clique em "+" para adicionar mais secrets
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required:[name, value]
+            properties:
+              name:
+                title: Secret ID
+                type: string
+                description: "Ex: MINHA_VARIAVEL_GKE_<ENV>"
+                pattern: '^[A-Z0-9_]+$'
+              value:
+                title: Secret Value
+                type: string
+                ui:widget: password # Esconde o valor na tela igual senha
+                ui:backstage:
+                  review:
+                    mask: true # Esconde no resumo final (Review) da tela
 
   steps:
-    - id: create-secret
-      name: Create GCP Secret
-      action: datolabs:gcp:secrets-manager:create
+    - id: upsert-gcp-secrets
+      name: Criando e Atualizando Secrets no GCP
+      action: gcp:secrets-manager:upsert
       input:
-        project: ${{ parameters.project }}
-        name: ${{ parameters.secret_id }}
-        value: ${{ parameters.secret_value }}
+        project: ${{ parameters.project_id }}
+        secrets: ${{ parameters.secrets_list }}
+
+  output:
+    links:
+      - title: Acessar Secret Manager no GCP
+        url: https://console.cloud.google.com/security/secret-manager?project=${{ parameters.project_id }}
