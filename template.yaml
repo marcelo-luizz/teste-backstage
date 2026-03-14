@@ -1,0 +1,41 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: gcp-secret-create
+  title: Create GCP Secret
+  description: Create a secret in Google Cloud Secret Manager
+spec:
+  owner: user:guest
+  type: service
+
+  parameters:
+    - title: Secret configuration
+      required:
+        - project
+        - secret_id
+        - secret_value
+      properties:
+        project:
+          title: GCP Project ID
+          type: string
+          description: ID do projeto GCP
+
+        secret_id:
+          title: Secret ID
+          type: string
+          description: Nome do secret
+
+        secret_value:
+          title: Secret Value
+          type: string
+          description: Valor do secret
+          ui:widget: password
+
+  steps:
+    - id: create-secret
+      name: Create GCP Secret
+      action: datolabs:gcp:secrets-manager:create
+      input:
+        project: ${{ parameters.project }}
+        name: ${{ parameters.secret_id }}
+        value: ${{ parameters.secret_value }}
