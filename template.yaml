@@ -68,7 +68,7 @@ spec:
         - secrets
       properties:
         secrets:
-          title: Lista de Secrets
+          title: Secrets
           description: O prefixo selecionado na etapa anterior será adicionado automaticamente.
           type: array
           minItems: 1
