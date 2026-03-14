@@ -22,12 +22,11 @@ spec:
           enum:
             - create
             - update
-          # enumNames deixa as opções mais amigáveis na tela
           enumNames:
             - 'Criar novo(s) Secret(s)'
             - 'Atualizar Secret(s) Existente(s)'
           default: create
-          ui:widget: radio # Renderiza como opções de marcar (bolinhas)
+          ui:widget: radio
 
     - title: Projeto e Configurações
       required: 
@@ -59,7 +58,8 @@ spec:
               value:
                 title: Secret Value (Valor)
                 type: string
-                ui:field: Secret 
+                # Aqui chamamos o nosso novo componente!
+                ui:field: PasswordReveal
                 ui:backstage:
                   review:
                     mask: true 
