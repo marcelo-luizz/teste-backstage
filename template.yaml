@@ -59,18 +59,16 @@ spec:
               value:
                 title: Secret Value (Valor)
                 type: string
-                ui:widget: password 
+                ui:field: Secret 
                 ui:backstage:
                   review:
                     mask: true 
-
   steps:
     - id: upsert-secrets-action
       name: Executando Operação no GCP
       action: gcp:secrets-manager:upsert
       input:
         project: ${{ parameters.project_id }}
-        # Passamos a opção escolhida pelo usuário para a nossa Action em Node.js
         operation: ${{ parameters.operation_type }}
         secrets: ${{ parameters.secrets }}
 
