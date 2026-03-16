@@ -36,13 +36,13 @@ spec:
             **Regras de Prefixo Automático Aplicadas:**
             * **GKE:** Muda conforme projeto (Ex: `GKE_INTEGRATION_`, `GKE_PRE_PROD_`, `GKE_PROD_`)
             * **Airflow:** Padrão fixo (`AIRFLOW_VARIABLES_`)
-            * **Database:** Padrão fixo (`DATABASE_PASSWORD_`)
+            * **Database:**
             * **Genérico:** Cria exatamente com o nome que você digitar, sem nenhuma alteração.
           type: string
           enum:
             - gke
             - airflow
-            - database_password
+            - database_credentials
             - generic
           enumNames:
             - '📦 GKE Variables'
