@@ -1,0 +1,10 @@
+/***/
+/**
+ * The google-secret-manager-provisioner module for @backstage/plugin-scaffolder-backend.
+ *
+ * @packageDocumentation
+ */
+
+
+export * from './module';
+export { scaffolderBackendModuleGCP as default } from './module';
