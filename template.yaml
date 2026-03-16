@@ -60,11 +60,17 @@ spec:
             - jeitto-integracao
             - jeitto-pre-prod
             - jeitto-prod
+            - stage-1.0
+            - homolog-1.0
+            - prod-1.0
           enumNames:
             - 'Devops Labs (devops-labs-397603)'
             - 'Integração (jeitto-integracao)'
             - 'Pré Produção (jeitto-pre-prod)'
             - 'Produção (jeitto-prod)'
+            - 'Stage (jeitto-backend-homolog)'
+            - 'Homologação (jeitto-backend-homolog)'
+            - 'Produção (jeitto-backend-prod)'
 
     - title: Preenchimento das Secrets
       required: 
