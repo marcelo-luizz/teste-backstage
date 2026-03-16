@@ -37,15 +37,18 @@ spec:
             * **GKE:** Muda conforme projeto (Ex: `GKE_INTEGRATION_`, `GKE_PRE_PROD_`, `GKE_PROD_`)
             * **Airflow:** Padrão fixo (`AIRFLOW_VARIABLES_`)
             * **Database:** Padrão fixo (`DATABASE_PASSWORD_`)
+            * **Genérico:** Cria exatamente com o nome que você digitar, sem nenhuma alteração.
           type: string
           enum:
             - gke
             - airflow
             - database_password
+            - generic
           enumNames:
             - '📦 GKE Variables'
             - '🌪️ Apache Airflow'
             - '🗄️ Database Passwords'
+            - '🧩 Genérico (Nome exato conforme digitado)'
           default: gke
           ui:widget: radio
 
