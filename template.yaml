@@ -115,7 +115,7 @@ spec:
           owner: ${{ user.entity.spec.profile.email }}
           squad_owner: ${{ (parameters.squad_owner | parseEntityRef).name }}
           environment: ${{ parameters.project_id }}
-          created_by: "Created by Backstage"
+          created_by: "Backstage"
   output:
     links:
       - title: Visualizar Secrets no Console do GCP
