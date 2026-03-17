@@ -112,10 +112,9 @@ spec:
         secret_type: ${{ parameters.secret_type }} 
         secrets: ${{ parameters.secrets }}
         labels:
-          owner: ${{ user.entity.spec.profile.email }}
+          owner: ${{ user.entity.spec.profile.email || user.entity.metadata.name }}
           squad_owner: ${{ (parameters.squad_owner | parseEntityRef).name }}
           environment: ${{ parameters.project_id }}
-          created_by: "backstage"
   output:
     links:
       - title: Visualizar Secrets no Console do GCP
