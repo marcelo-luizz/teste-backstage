@@ -3,19 +3,19 @@ kind: Template
 metadata:
   name: create-gcp-secret
   title: Create or Update Secrets in GCP
-  description: Template para criar ou atualizar múltiplos secrets no GCP Secret Manager
+  description: Template for creating or updating secrets in GCP Secrets Manager.
   tags:
     - gcp
     - secret-manager
 spec:
   owner: guest
   type: service
-
   parameters:
     - title: Configuração da Operação
       required:
         - operation_type
         - secret_type
+        - squad_owner
         - project_id
       properties:
         operation_type:
@@ -29,7 +29,6 @@ spec:
             - 'Atualizar Secret(s) Existente(s)'
           default: create
           ui:widget: radio
-          
         secret_type:
           title: Qual o destino/tipo desta Secret?
           description: |
@@ -42,14 +41,12 @@ spec:
             - gke
             - airflow
             - database_credentials
-            - generic
           enumNames:
             - '📦 GKE Variables'
             - '🌪️ Apache Airflow'
-            - '🗄️ Database Passwords'
+            - '🗄️ Database Credentials'
           default: gke
           ui:widget: radio
-
         project_id:
           title: Projeto GCP
           type: string
@@ -69,7 +66,14 @@ spec:
             - 'Stage (jeitto-backend-homolog)'
             - 'Homologação (jeitto-backend-homolog)'
             - 'Produção (jeitto-backend-prod)'
-
+        squad_owner:
+          title: Squad Owner
+          type: String
+          description: Nome da Squad Responsável
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
     - title: Preenchimento das Secrets
       required: 
         - secrets
@@ -107,7 +111,11 @@ spec:
         operation: ${{ parameters.operation_type }}
         secret_type: ${{ parameters.secret_type }} 
         secrets: ${{ parameters.secrets }}
-
+        labels:
+          owner: ${{ user.entity.spec.profile.email }}
+          squad_owner: ${{ (parameters.squad_owner | parseEntityRef).name }}
+          environment: ${{ parameters.project_id }}
+          created_by: "Created by Backstage"
   output:
     links:
       - title: Visualizar Secrets no Console do GCP
