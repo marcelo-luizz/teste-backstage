@@ -68,7 +68,7 @@ spec:
             - 'Produção (jeitto-backend-prod)'
         squad_owner:
           title: Squad Owner
-          type: String
+          type: string
           description: Nome da Squad Responsável
           ui:field: OwnerPicker
           ui:options:
