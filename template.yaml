@@ -8,7 +8,7 @@ metadata:
     - gcp
     - secret-manager
 spec:
-  owner: guest
+  owner: marcelo-luizz
   type: service
   parameters:
     - title: Configuração da Operação
